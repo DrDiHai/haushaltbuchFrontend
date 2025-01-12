@@ -1,8 +1,11 @@
+// console.log('init connected component');
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { BaseComponent } from '../base.component';
 import { ConnectionService } from '../connection.service';
-import { Message, LoginCredentials } from '../Message';
+import { Message } from '../messages/Message';
+import { LoginCredentials } from "../messages/admin.messages";
 
 @Component({
     selector: 'app-ConnectedComponent',
@@ -29,7 +32,7 @@ export class ConnectedComponent extends BaseComponent implements OnInit, OnDestr
         isPrimary?: boolean
     ) {
         this.connectionService.getNewConnection(this, loginSubjectOrObserveHandshake, isPrimary);
-        this.connected = true;
+        this.connected = true; // always true if no exception was thrown
     }
 
     // remember token of owned connection
@@ -56,6 +59,7 @@ export class ConnectedComponent extends BaseComponent implements OnInit, OnDestr
         console.info(this.componentID, 'is shutting down')
         if (this.connected) {
             this.connectionService.removeConnection(this.componentID);
+            this.connected = false;
          }
     }
 

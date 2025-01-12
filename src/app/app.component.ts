@@ -1,7 +1,9 @@
+// console.log('init app component');
+
 import { Component, OnInit } from '@angular/core';
 import { ConnectionService } from './connection.service';
 import { ConnectedComponent } from './connected-component/connected.component';
-import { LoginMessage, OutgoingMessage, WelcomeMessage, LoginCredentials, IncomingMessage, MessageType } from './Message';
+import { IncomingMessage, MessageType } from './messages/Message';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,9 @@ import { LoginMessage, OutgoingMessage, WelcomeMessage, LoginCredentials, Incomi
 })
 export class AppComponent extends ConnectedComponent implements OnInit {
   title = 'haushaltbuchFrontend';
-  activateLoginComponent = true;
+  activateAnyComponent = true;
+  activateLoginComponent = false;
+  activateSetupConfigComponent = false;
 
   constructor(private specificService:ConnectionService) {
     super(specificService);
@@ -21,6 +25,17 @@ export class AppComponent extends ConnectedComponent implements OnInit {
     console.groupCollapsed(this.componentID, "received", message.type, "message");
     console.log(message);
     console.groupEnd();
+    if (message.type == MessageType.Hello) {
+      // check basic status of backend
+      if (message.status == 'noDB') {
+        console.log('Open Setup Dialogue');
+        this.activateAnyComponent = false;
+        this.activateSetupConfigComponent = true;
+      } else {
+        this.activateLoginComponent = true;
+        this.activateAnyComponent = true;
+      }
+    }
     if (message.type == MessageType.Welcome) {
       // we are logged in, destroy LoginComponent
       this.activateLoginComponent = false;

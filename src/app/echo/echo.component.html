@@ -4,6 +4,7 @@
     <select id="connectionSelect" [(ngModel)]="selectedConnectionKey">
         <option value="">myself</option>
         <option *ngFor="let key of connectionKeys" [value]="key">{{key}}</option>
+        <option value="*">all</option>
     </select>
 </div>
 <div>

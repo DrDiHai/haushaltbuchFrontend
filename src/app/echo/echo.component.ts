@@ -1,7 +1,10 @@
+// console.log('init echo component');
+
 import { Component, OnInit } from '@angular/core';
 import { ConnectionService } from '../connection.service';
 import { ConnectedComponent } from '../connected-component/connected.component';
-import { IncomingMessage, EchoMessage } from '../Message';
+import { IncomingMessage } from '../messages/Message';
+import { EchoMessage } from '../messages/admin.messages';
 
 @Component({
   selector: 'app-echo',
@@ -34,7 +37,9 @@ export class EchoComponent extends ConnectedComponent implements OnInit {
   }
 
   submitForm() {
-    if (this.selectedConnectionKey==='' || ConnectionService.connections[this.selectedConnectionKey]) {
+    if (this.selectedConnectionKey===''
+      || this.selectedConnectionKey==='*' 
+      || ConnectionService.connections[this.selectedConnectionKey]) {
       this.sendMessage(new EchoMessage(this.selectedConnectionKey, this.payload));
     } else {
       console.error('Unknown Component', this.selectedConnectionKey);

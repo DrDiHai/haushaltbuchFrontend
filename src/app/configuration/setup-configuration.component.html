@@ -1,0 +1,109 @@
+<h3>Setup Configuration ({{componentID}}) </h3>
+
+<form (ngSubmit)="submitForm()" #form="ngForm">
+
+    <p>Explanation of single and multi user mode</p>
+    <div>
+        <label for="user-mode">Choose user mode:</label>
+        <select id="user-mode" [(ngModel)]="configuration.app.userMode" name="user-mode" required>
+            <option value="single">Single User</option>
+            <option value="multi">Multi User </option>
+        </select>
+    </div>
+
+    <div *ngIf="configuration.app.userMode === 'multi'">
+        <p>Enter the username and password of the owner</p>
+        <div>
+            <label for="adminuser">User:</label>
+            <input id="adminuser" [(ngModel)]="adminuser" name="adminuser" required />
+        </div>
+        <div>
+            <label for="adminpassword">Password:</label>
+            <input id="adminpassword" [(ngModel)]="adminpassword" name="adminpassword" required />
+        </div>
+    </div>
+
+    <p>Explanation of database db-options</p>
+    <div>
+        <label for="db-option">Choose database:</label>
+        <select id="db-option" [(ngModel)]="dbOption" name="db-option" required>
+            <option value="SQLite">SQLite</option>
+            <option value="MariaDB">MariaDB</option>
+        </select>
+    </div>
+
+    <div *ngIf="dbOption === 'SQLite'">
+        <p>
+            Explanation of the DB filename options. <br>
+            Default location is '{{db_locations[0]}}'
+        </p>
+        <label for="db-loc">Chose location of DB file:</label>
+        <select id="db-loc" [(ngModel)]="db_location" name="db-loc" required>
+            <option *ngFor="let db_location of db_locations" [value]="db_location">{{db_location}}</option>
+            <option value="custom">Custom... (specify as filename)</option>
+        </select>
+        <br>
+        <label for="file">DB Filename:</label>
+        <input id="file" [(ngModel)]="db_filename" name="file" required />
+        <div *ngIf="db_location == 'custom'">
+            DB file will be: '{{db_filename}}'
+            <br> A relative location refers to '{{db_locations[0]}}'
+        </div>
+        <div *ngIf="db_location != 'custom'">
+            DB file will be: '{{db_location}}{{filepath_delimiter}}{{db_filename}}'
+        </div>
+    </div>
+
+    <div *ngIf="dbOption === 'MariaDB'">
+        <p>Explanation of DB credentials</p>
+        <div>
+            <label for="host">Host:</label>
+            <input id="host" [(ngModel)]="configuration.db_cfg.host" name="host" required />
+        </div>
+        <div>
+            <label for="db">DB:</label>
+            <input id="db" [(ngModel)]="configuration.db_cfg.dbname" name="db" required />
+        </div>
+        <div>
+            <label for="dbuser">User:</label>
+            <input id="dbuser" [(ngModel)]="configuration.db_cfg.dbuser" name="dbuser" required />
+        </div>
+        <div>
+            <label for="dbpassword">Password:</label>
+            <input id="dbpassword" [(ngModel)]="configuration.db_cfg.password" name="dbpassword" required />
+        </div>
+    </div>
+
+    <p> Explanation of DB config file location. Current search path is: {{dbcfg_file_searchpath_as_string}}. 
+    </p>
+    <div>
+        <label for="location">Choose location to store configuration:</label>
+        <select id="location" name="location" [(ngModel)]="dbcfg_file_location">
+          <option *ngFor="let location of dbcfg_file_searchpath" [value]="location">
+            {{ location }}
+          </option>
+          <option value="custom">Custom... (specify as filename)</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="dbcfg_file">Filename:</label>
+        <input id="dbcfg_file" [(ngModel)]="dbcfg_file" name="dbcfg_file" required />
+    </div>
+    <div *ngIf="dbcfg_file_location == 'custom' && dbcfg_file !== '' && dbcfg_file !== dbcfg_file_default">
+        Explanation how to call the app with option ..... '{{dbcfg_file}}'
+    </div>
+    <div *ngIf="dbcfg_file_location != 'custom' && dbcfg_file !== '' && dbcfg_file !== dbcfg_file_default">
+        Explanation how to call the app with option ..... '{{dbcfg_file_location}}{{filepath_delimiter}}{{dbcfg_file}}'
+    </div>
+    <div *ngIf="dbcfg_file_location == 'custom' && (dbcfg_file == '' || dbcfg_file == dbcfg_file_default)">
+        Specify location. A relative location refers to '{{dbcfg_file_searchpath[0]}}'.
+    </div>
+
+    <button type="submit">Setup</button>
+</form>
+
+<div *ngIf="result">
+    <h3>Erstelltes Objekt:</h3>
+    <pre>{{ result | json }}</pre>
+</div>

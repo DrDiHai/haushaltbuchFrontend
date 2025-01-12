@@ -1,8 +1,11 @@
+// console.log('init login component');
+
 import { Component, OnInit, Output } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ConnectedComponent } from '../connected-component/connected.component';
 import { ConnectionService } from '../connection.service';
-import { LoginMessage, OutgoingMessage, WelcomeMessage, LoginCredentials, IncomingMessage, MessageType } from '../Message';
+import { IncomingMessage, MessageType } from '../messages/Message';
+import { LoginCredentials } from "../messages/admin.messages";
 
 @Component({
   selector: 'app-login-component',
@@ -27,8 +30,8 @@ export class LoginComponent extends ConnectedComponent implements OnInit {
     console.groupEnd();
     if (message.type == MessageType.Hello) {
       let status = message.status;
-      if (status == 'noDB' || status == 'singleUser') {
-        this.loginSubject.next({user: '-'});
+      if (status == 'singleUser') {
+        this.loginSubject.next({});
       } else {
         this.getLoginCredentials = true;
       }

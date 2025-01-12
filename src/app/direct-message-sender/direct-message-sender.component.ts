@@ -1,3 +1,5 @@
+// console.log('init pirate component');
+
 import { Component, OnInit } from '@angular/core';
 import { ConnectedComponent } from '../connected-component/connected.component';
 import { ConnectionService } from '../connection.service';
